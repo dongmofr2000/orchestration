@@ -1,0 +1,28 @@
+﻿id: etl_vins_analysis
+namespace: dev
+
+description: Pipeline ETL complet PURE PYTHON (Pandas) pour le nettoyage, la jointure, le calcul du CA et l'analyse des prix des produits de vins.
+
+tasks:
+  - id: complete_etl_analysis
+    type: io.kestra.plugin.scripts.python.Commands
+    name: Exécution du Pipeline ETL complet (Pandas)
+    
+    inputFiles:
+      etl_vins.py: "{{ read('etl_vins.py') }}"
+      Fichier_erp.csv: "{{ read('Fichier_erp.csv') }}" 
+      Fichier_web.csv: "{{ read('Fichier_web.csv') }}"
+      fichier_liaison.csv: "{{ read('fichier_liaison.csv') }}"
+      
+    requirements:
+      - pandas
+      - numpy
+      - scipy
+      - openpyxl
+
+    commands:
+      - python etl_vins.py
+      
+    outputFiles:
+      - rapport_vins_millésimés.xlsx
+      - produits_sans_lien_web.xlsx
