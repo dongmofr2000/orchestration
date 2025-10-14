@@ -1,0 +1,308 @@
+ID Produit;Nom du Vin;Prix Unitaire (€);Stock Actuel
+4032;Pierre Jean Villa IGP Collines Rhodaniennes Gamine 2018;14.1;0
+4047;Pierre Gaillard Côtes-du-Rhône Blanc Les Gendrines 2018;18.3;36
+4049;Pierre Gaillard Saint-Joseph Rouge 2018;19.3;46
+4051;Jeanne Gaillard IGP Collines Rhodaniennes Syrah Terre de Mandrin 2018;7.7;41
+4056;Clos du Mont-Olivet Côtes-du-Rhône Vieilles Vignes 2018;12.7;0
+4057;Mourgues du Grès Costières de Nîmes Galets Dorés 2019;8.7;112
+4058;Mourgues du Grès Costières de Nîmes Galets Rouges 2019;8.7;267
+4059;Mourgues du Grès Costières de Nîmes Galets Rosés 2019;8.7;36
+4060;Mourgues du Grès Costières de Nîmes Terre d'Argence 2017;11.9;73
+4062;Mourgues du Grès IGP Pont du Gard Terre d'Argence 2018;11.9;60
+4063;Mourgues du Grès Costières de Nîmes Terre de Feu 2017;14.5;10
+4064;Oratoire Saint Martin Cairanne Rouge Réserve des Seigneurs 2017;14.4;27
+4065;Oratoire Saint Martin Cairanne Rouge Les Douyes 2016;19.5;35
+4068;Gilles Robin Crozes-Hermitage Rouge Papillon 2019;16.6;157
+4074;Domaine de la Jérôme Côtes du Rhône Village 201;12.7;50
+4075;Plateau des Chênes Lirac 2015;14.7;54
+4076;Plateau des Chênes Lirac 2016;14.05;53
+4083;"Rimauresq Côtes de Provence Blanc Cru Classé ""R"" 2019";17.0;0
+4085;Rimauresq Côtes de Provence Rouge Cru Classé 2017;19.0;37
+4086;Rimauresq Côtes de Provence Blanc Cru Classé 2019;16.4;31
+4087;Rimauresq Côtes de Provence Cru Classé Rosé 2019;14.4;45
+4094;Paul Ginglinger Gewurztraminer Wahlenbourg 2017;13.7;24
+4095;Paul Ginglinger Muscat Caroline 2018;12.6;19
+4097;Paul Ginglinger Pinot Gris Les Prelats 2018;12.8;26
+4099;Paul Ginglinger Riesling Drei Exa 2018;12.8;43
+4100;Emile Boeckel Gewurztraminer Grand Cru Zotzenberg 2016;15.8;7
+4101;Emile Boeckel Pinot Gris Grand Cru Zotzenberg 2016;15.8;37
+4102;Emile Boeckel Sylvaner Grand Cru Zotzenberg 2017;16.3;16
+4103;Emile Boeckel Riesling Grand Cru Wiebelsberg 2016;16.3;6
+4104;Emile Boeckel Riesling Brandluft 2018;9.7;37
+4105;Emile Boeckel Sylvaner Vieilles Vignes 2019;6.8;42
+4106;Emile Boeckel Pinot Noir Barriques Oberpfoeller 2018;12.6;26
+4151;Elian Daros Côtes du Marmandais Abouriou 2016;13.7;0
+4152;Elian Daros Côtes du Marmandais Chante Coucou 2016;19.2;57
+4154;Elian Daros Côtes du Marmandais Le Vin Est Une Fête 2017;9.8;128
+4155;Elian Daros Côtes du Marmandais Le Vignoble d'Elian 2016;14.5;70
+4157;Planeta Sicilia Alastro 2017;12.0;10
+4158;Planeta Sicilia Etna Rosso 2018;18.5;0
+4159;Planeta Sicilia La Segreta Bianco 2017;9.3;0
+4160;Planeta Sicilia La Segreta Rosso 2017;9.3;0
+4161;Planeta Sicilia Plumbago 2017;11.6;0
+4162;Domino Romano Ribera Del Duero Camino Romano 2016;14.3;26
+4163;Parés Baltà Penedès Calcari 2018;10.8;18
+4164;Parés Baltà Penedès Mas Petit 2015;7.6;19
+4165;Parés Baltà Penedès Indigena 2017;12.0;57
+4167;Ollieux Romanis Corbières Rouge Cuvée Prestige 2017;14.3;36
+4168;Ollieux Romanis Corbières Blanc Cuvée Prestige 2018;18.2;50
+4170;Ollieux Romanis Corbières Classique 2018;9.0;58
+4171;Le Hameau Des Ollieux Monsieur Pinot 2017;7.8;65
+4172;Maurel Pays d'Oc Chardonnay 2019;5.7;167
+4173;Maurel Pays d'Oc Chenin-Colombard 2019;5.7;100
+4174;Maurel Cabardès Tradition 2017;5.7;94
+4176;Domaine de l'Hortus Pic Saint-Loup La Bergerie Rouge 2018;13.5;276
+4177;Domaine de l'Hortus Val de Montferrand La Bergerie Blanc 2018;13.5;109
+4178;Domaine de l'Hortus Pic Saint-Loup La Bergerie Rosé 2019;11.5;12
+4181;Borie La Vitarèle Saint-Chinian Les Terres Blanches 2019;11.9;137
+4182;Borie La Vitarèle Saint-Chinian Les Schistes 2017;16.7;53
+4186;Le Pas de l'Escalette Terrasses du Larzac Les Clapas Rouge 2018;16.6;0
+4187;Le Pas de l'Escalette Languedoc Les Petits Pas 2019;13.3;90
+4188;Château de La Liquière Languedoc Blanc Les Amandiers 2019;9.5;99
+4190;Le Pas de l'Escalette Coteaux du Languedoc Ze Rozé 2019;12.1;0
+4191;Château de La Liquière Faugères Les Amandiers Rouge 2019;9.3;209
+4192;Château de La Liquière Faugères Cistus Rouge 2017;17.8;43
+4193;Château de La Liquière Faugères Cistus Blanc 2019;13.5;55
+4194;Château de La Liquière Faugères 2017;10.8;5
+4197;Château de La Liquière Faugères Les Amandiers Rosé 2019;9.4;24
+4198;Moulin de Gassac IGP Pays d'Hérault Guilhem Rouge 2019;5.8;105
+4200;Moulin de Gassac IGP Pays d'Hérault Guilhem Rosé 2019;5.8;190
+4203;Mas Laval IGP Pays d'Hérault Les Pampres Blancs 2018;9.9;89
+4204;Mas Laval IGP Pays d'Hérault Les Pampres Rouges 2017;11.3;31
+4207;Domaine Montrose Côtes de Thongue Rouge 2018;6.7;195
+4208;Domaine Montrose Côtes de Thongue Rosé 2019;7.6;578
+4216;Domaine de l'Ecu Muscadet Classic 2018;13.4;34
+4217;Domaine de l'Ecu Muscadet Granite 2018;17.1;17
+4219;Domaine de l'Ecu Muscadet Orthogneiss 2014;16.7;0
+4220;Xavier Frissant Touraine Amboise Chenin Les Pierres 2018;11.6;66
+4221;Xavier Frissant Touraine Les Roses du Clos 2018;12.8;83
+4222;Xavier Frissant Touraine Amboise M de La Touche 2016;8.9;66
+4223;Xavier Frissant Touraine Sauvignon 2019;9.7;180
+4224;Pierre Martin Sancerre Chavignol Rouge 2017;17.2;13
+4225;Pierre Martin Sancerre Chavignol Blanc 2019;16.9;20
+4227;La Cotelleraie Saint-Nicolas-de-Bourgueil La Croisée 2018;12.6;49
+4229;Mérieau Touraine L'Arpent des Vaudons 2018;9.6;26
+4231;Argentine Mendoza Alamos Malbec 2018;11.1;0
+4232;Argentine Mendoza Alamos Chardonnay 2019;11.1;35
+4235;Maroc Graillot/Thaleb Tandem Syrah 2015;17.1;0
+4241;Parcé Frères IGP Côtes Catalanes Hommage à Fernand Blanc 2019;8.9;7
+4242;Parcé Frères Côtes du Roussillon Villages Zoé Rouge 2018;8.6;85
+4244;La Préceptorie Côtes du Roussillon Coume Marie 2018;13.5;50
+4245;Parcé Frères IGP Pays d'Oc Zoé Viognier 2019;8.9;141
+4246;Domaine Saint-Denis Mâcon Lugny 2017;15.3;25
+4248;Domaine Saint-Denis Mâcon Chardonnay 2017;14.8;64
+4250;Domaine Saint-Denis Bourgogne Rouge Clos de la Coque 2018;19.5;14
+4251;Domaine Saint-Denis Bourgogne Rouge Le Clos 2017;14.1;102
+4260;Chermette Domaine du Vissoux Beaujolais Blanc Collonge 2017;12.2;22
+4261;Chermette Domaine du Vissoux Beaujolais Griottes 2018;9.9;89
+4262;Chermette Domaine du Vissoux Brouilly Pierreux 2018;15.8;35
+4263;Chermette Domaine du Vissoux Fleurie Poncié 2018;15.8;50
+4264;Chermette Domaine du Vissoux Moulin à Vent Les Trois Roches 2018;17.8;48
+4265;Domaine Bulliat Beaujolais Villages Bibine 2018;9.6;21
+4267;Domaine Bulliat Morgon Amphore Cou de Jus 2019;19.0;21
+4268;Domaine Bulliat Morgon Le Colombier 2019;15.2;55
+4269;Domaine Sérol Côte Roannaise Les Originelles 2019;10.2;1
+4270;Domaine Sérol Côte Roannaise Les Millerands 2018;15.5;31
+4271;Domaine Sérol Côte Roannaise Perdrizière 2016;16.6;56
+4272;Domaine Sérol Côte Roannaise Rosé Cabochard 2016;9.2;25
+4274;Domaine Sérol Vin Mousseux Rosé Turbullent Méthode Ancestrale;12.9;0
+4275;I Fabbri Chianti Classico Lamole 2017;14.9;14
+4276;I Fabbri Chianti Classico Terra Di Lamole 2015;17.6;1
+4280;Château de Cazeneuve Languedoc Blanc 2016;18.9;46
+4281;Château de Cazeneuve Val de Montferrand Rouge Caza Sorix 2019;11.6;4
+4297;Domaine de La Tour Du Bon Bandol Blanc 2019;19.0;26
+4301;Domaine de La Tour Du Bon Bandol Rosé 2019;17.5;14
+4304;Domaine de l'Idylle Savoie Cruet 2018;8.1;133
+4306;Domaine de l'Idylle Roussette de Savoie Anne de Chypre 2018;10.7;41
+4307;Domaine de l'Idylle Savoie Mondeuse Le Tithonien 2018;10.9;0
+4601;Catherine et Claude Maréchal Bourgogne Aligoté 2018;16.1;31
+4607;François Bergeret Hautes Côtes de Beaune Vieilles Vignes Rondo 2017;13.4;0
+4609;François Bergeret Hautes Côtes de Beaune Rouge 2017;11.8;237
+4610;François Bergeret Hautes Côtes de Beaune Blanc 2018;13.1;114
+4613;Gilbert Picq Chablis 2017;16.9;31
+4614;Gilbert Picq Chablis En Vaudécorse 2017;19.0;50
+4620;Bernard Baudry Chinon Rouge Les Granges 2018;11.9;106
+4621;Bernard Baudry Chinon Rouge Les Grézeaux 2017;16.5;49
+4649;Bernard Baudry Chinon Blanc 2018;16.5;5
+4664;La Cotelleraie Saint-Nicolas-de-Bourgueil Le Vau Jaumier 2016;16.4;15
+4665;Vincent Carême Vouvray Sec 2018;14.4;6
+4668;Xavier Frissant Touraine Amboise L'Orée des Frênes 2015;12.3;23
+4670;Domaine Pellé Menetou Salon Blanc Morogues 2018;17.0;93
+4672;Domaine Pellé Menetou Salon Rouge Morogues 2017;17.8;5
+4673;Domaine Pellé Sancerre Rouge La Croix Au Garde 2017;19.8;35
+4674;Domaine Pellé Sancerre Blanc La Croix Au Garde 2018;19.0;41
+4675;Domaine Rotier Gaillac Blanc Sec Renaissance 2015;10.7;35
+4676;Domaine Rotier Gaillac Blanc Doux Les Gravels 2016;12.9;73
+4677;Domaine Rotier Gaillac Rouge Les Gravels 2016;9.5;161
+4679;Domaine Rotier Gaillac Rouge Renaissance 2016;13.2;37
+4680;Domaine de Joy Côtes de Gascogne Envie de Joy 2018;6.3;34
+4681;Domaine de Joy Côtes de Gascogne Blanc Moelleux Saint-André 2018;7.1;178
+4682;Château Plaisance Fronton Rouge 2017;9.1;26
+4683;Château Plaisance Fronton Rosé 2019;9.1;42
+4684;Château Plaisance Fronton To Co Que Cal 2015;18.1;25
+4686;Cosse Maisonneuve Cahors Solis 2018;14.0;6
+4689;Domaine Plageoles Côtes du Tarn Blanc Sec Ondenc;12.8;6
+4690;Domaine Plageoles Vin de France Contre-Pied 2016;12.8;15
+4703;Albert Mann Crémant d'Alsace Extra Brut 2017;19.8;2
+4704;Albert Mann Gewurztraminer 2017;18.2;0
+4706;Albert Mann Muscat 2018;16.8;23
+4712;Domaine Schoenheitz Crémant d'Alsace Mémoire de Granit Extra Brut;15.8;0
+4713;Domaine Schoenheitz Gewurztraminer Lisenberg 2015;18.4;6
+4714;Domaine Schoenheitz Muscat 2017;13.3;25
+4715;Domaine Schoenheitz Pinot Blanc Val Saint Grégoire 2017;11.1;30
+4716;Domaine Schoenheitz Pinot Gris Herrenreben 2017;18.6;7
+4718;Domaine Schoenheitz Pinot Noir Val Saint Grégoire 2017;18.2;19
+4719;Domaine Schoenheitz Pinot Noir Tradition 2019;12.5;29
+4720;Domaine Schoenheitz Riesling Herrenreben 2018;15.9;10
+4722;François Baur Pinot Gris Herrenweg de Turckheim 2018;13.7;0
+4726;François Baur Pinot Noir Schlittweg 2017;12.7;0
+4729;Emile Boeckel Crémant Brut Blanc de Blancs;8.6;151
+4730;Domaine Muré Crémant d'Alsace Cuvée Prestige;14.3;6
+4733;Camin Larredya Jurançon Sec La Part Davant 2018;16.8;13
+4734;Camin Larredya Jurançon Moelleux Costat Darrer 2018;15.3;36
+4739;Jean-Paul Brun Beaujolais Le Ronsay 2016;7.4;50
+4740;Jean-Paul Brun Beaujolais L'Ancien 2016;9.7;8
+4748;Jean-Paul Brun Saint-Amour 2017;14.5;14
+4749;Domaine de Montgilet Anjou Blanc 2016;11.9;140
+4750;Domaine de Montgilet Anjou Rouge Les Yvonnais 2015;16.4;45
+4753;Domaine de Montgilet Coteaux de l'Aubance 2017;12.0;76
+4755;Domaine de Montgilet Vin de France Grolleau 2019;7.4;97
+4759;Domaine Saint-Nicolas Fiefs Vendéens Rouge Reflets 2018;16.9;49
+4776;Château de La Liquière Pays d'Hérault Blanc A Mi Chemin 2017;6.8;11
+4778;Clos du Mont-Olivet Lirac Rosé Farel 2019;13.9;0
+4779;Clos du Mont-Olivet Vin de France La Sabonite;7.8;163
+4780;Maurice Schoech Crémant d'Alsace Brut Rosé Bulles de Granite;13.7;12
+4782;Paul Ginglinger Pinot Blanc 2017;9.8;22
+4785;Maurice Schoech Pinot Auxerrois Vieilles Vignes 2018;10.1;18
+4786;Maurice Schoech Gewurztraminer 2018;12.1;37
+4788;Maurice Schoech Pinot Gris 2018;12.3;21
+4789;Maurice Schoech Pinot Noir 2018;11.1;62
+4790;Maurice Schoech Riesling 2018;11.1;43
+4791;Maurice Schoech Pinot Noir Pièce de Chêne 2016;13.6;24
+4793;Maurice Schoech Pinot Gris Grand Cru Schlossberg 2017;18.7;17
+4795;Emile Boeckel Crémant Brut Rosé;12.0;34
+4799;Domaine de la Monardière Vacqueyras Les Deux Monardes 2017;14.9;56
+4858;Château Turcaud Bordeaux Rosé 2019;6.5;257
+4860;Philippe Nusswitz Duché d'Uzès Orénia Rosé 2019;8.7;85
+4861;Philippe Nusswitz Duché d'Uzès Orénia Rouge 2017;8.5;284
+4862;Philippe Nusswitz Duché d'Uzès Orénia Blanc 2018;9.9;168
+4863;Château Ollieux Romanis Corbières Rosé Classique 2019;8.2;0
+4865;Mourgues du Grès Costières de Nîmes Capitelles Rosé 2018;9.8;1
+4867;Château De La Selve IGP Coteaux de l'Ardèche Maguelonne Rosé 2019;9.9;0
+4870;Triennes IGP Méditerranée Rosé 2019;9.3;0
+4885;Saumaize-Michelin Mâcon Vergisson Sur La Roche 2017;18.7;6
+4890;Saumaize-Michelin Saint-Véran 2018;17.0;29
+4910;Antoine-Marie Arena Vin de France Rouge San Giovanni 2017;17.3;0
+4923;Cave de Castelmaure Corbières Rouge Vigneron 2018;7.0;143
+4924;Cave de Castelmaure Corbières Rouge Grande Cuvée 2017;12.8;0
+4926;Domaine La Croix Belle Côtes de Thongue Blanc Champ des Lys 2018;7.9;92
+4927;Domaine La Croix Belle Côtes de Thongue Rouge La Caringole 2018;6.5;0
+4928;Domaine La Croix Belle Côtes de Thongue Rouge Le Champ du Coq 2016;7.9;1
+4929;Domaine La Croix Belle Côtes de Thongue Rouge N°7 2017;16.7;4
+4930;Domaine La Croix Belle Côtes de Thongue Blanc N°7 2018;17.5;9
+4933;Marcel Richaud Cairanne Rouge 2018;18.4;30
+4936;Domaine Rouge Garance Côtes du Rhône Blanc De Garance 2018;11.1;88
+4937;Domaine Rouge Garance Côtes du Rhône Feuille de Garance 2019;9.9;28
+4938;Domaine Rouge Garance Côtes du Rhône Villages Garances 2016;12.5;0
+4939;Oratoire Saint Martin Cairanne Blanc Réserve des Seigneurs 2018;12.9;0
+4962;Château Turcaud Bordeaux Blanc Cuvée Majeure 2018;11.3;95
+4963;Château Turcaud Bordeaux Rouge 2016;7.0;289
+4964;Château Turcaud Bordeaux Rouge Cuvée Majeure 2018;12.1;72
+4965;Château Turcaud Entre-Deux-Mers 2019;7.1;203
+4976;Château Lafont Menaut Pessac-Leognan Rouge 2017;16.45;26
+4977;Château Lafont Menaut Pessac-Leognan Blanc 2017;16.3;47
+4978;Château Dutruch Grand Poujeaux Moulis 2016;18.5;0
+5016;Château Tour Des Gendres Bergerac Blanc Cuvée Des Conti 2017;9.3;1
+5019;Château Tour Des Gendres Bergerac Blanc Moulin Des Dames 2016;19.8;0
+5056;Domaine de Montgilet Anjou Rouge 2016;7.5;9
+5375;David-Beaupère Juliénas Les Trois Verres 2018;15.2;0
+5377;Argentine Alamos Catena Malbec 2017;19.0;7
+5379;Argentine Mendoza Alamos Torrontes 2017;11.1;26
+5380;Nouvelle-Zélande Marlborough Momo Sauvignon Blanc 2018;18.0;24
+5383;Nouvelle-Zélande Marlborough Kim Crawford Sauvignon Blanc 2015;19.5;9
+5389;Australie Maverick Breechens Blend 2012;16.1;5
+5394;Chili Valdivieso Merlot 2017;10.7;4
+5395;Chili Errazuriz Cabernet Sauvignon 2016;12.7;6
+5396;Chili De Martino Gallardia Cinsault 2017;17.1;34
+5439;La Préceptorie Maury Sec Rouge Copain Comme Cochon 2018;13.2;0
+5444;La Préceptorie Maury Rouge Cuvée Aurélie 2017;15.5;37
+5445;La Préceptorie Maury Blanc 2015;16.3;11
+5446;Parcé Frères Banyuls Rimage 2018;16.2;30
+5448;Parcé Frères Côtes du Roussillon Villages Hommage à Fernand 2017;7.2;0
+5477;Domaine Pellé Menetou Salon Blanc Les Vignes de Ratier 2018;19.8;38
+5479;Domaine Bulliat Beaujolais Blanc 2019;10.2;69
+5480;Domaine Bulliat Chiroubles Cuvée Félix 2019;10.4;37
+5481;Domaine Bulliat Moulin-à-Vent 2017;11.5;46
+5483;David-Beaupère Juliénas La Bottière Vieilles Vignes 2018;17.9;22
+5504;Château de la Selve Coteaux de l'Ardèche Blanc Saint-Régis Blanc 2019;13.8;35
+5506;Château de la Selve Coteaux de l'Ardèche Rouge Serre de Berty 2014;18.2;63
+5519;Domaine Chambeyron Côtes du Rhône 2017;12.9;35
+5525;Domaine Chambeyron Vin de Pays des Collines Rhodaniennes Viognier 2016;12.0;0
+5546;Thierry Germain Saumur-Champigny Cuvée Domaine 2018;15.2;130
+5610;Domaine Weinbach Pinot Blanc 2017;18.0;11
+5613;Albert Boxler Chasselas 2016;19.2;11
+5614;Albert Boxler Crémant d'Alsace Brut 2014;19.2;39
+5629;Parés Baltà Cava Brut Nature;10.3;51
+5693;Philippe Nusswitz Duché d'Uzès Orénia Blanc Réserve 2018;13.0;55
+5694;Philippe Nusswitz Duché d'Uzès Orénia Rouge Réserve 2016;12.7;62
+5695;Philippe Nusswitz IGP Cévènnes Rosé O Pale 2019;6.5;123
+5696;Planeta Sicilia Etna Bianco 2018;17.5;35
+5704;Domaine de l'Ecu Muscadet Gneiss 2015;16.9;5
+5705;Domaine Huet Vouvray Pétillant Brut 2014;19.8;9
+5706;Domaine des Terres d'Ocre Saint-Pourçain Blanc Instant T 2018;10.3;22
+5707;Domaine des Terres d'Ocre Saint-Pourçain Rouge Instant T 2015;10.8;13
+5715;François Baur Gewurztraminer Herrenweg de Turckheim 2016;13.7;35
+5722;Domaine de l'Hortus Pays de l'Hérault Le Loup Dans La Bergerie 2018;7.1;118
+5736;Triennes IGP Méditerranée Blanc Sainte Fleur 2018;14.9;10
+5737;Triennes IGP Méditerranée Rouge Les Auréliens 2016;11.0;12
+5738;Triennes IGP Méditerranée Rouge Saint Auguste 2016;14.6;26
+5739;Triennes IGP Méditerranée Rouge Merlot 2016;10.7;39
+5753;Château de la Selve Vin de France Petite Selve 2019;10.1;101
+5760;Huile d'Olive Extra Vierge Planeta 50cl;13.1;37
+5761;Huiles d'Olive Extra Vierge Planeta 3x 10cl;19.5;0
+5764;Parcé Frères Collioure Rouge Petit Gus 2018;12.9;84
+5777;Maurel Pays d'Oc Cabernet-Sauvignon 2017;5.7;132
+5778;Maurel Pays d'Oc Merlot 2018;5.8;36
+5779;Maurel Pays d'Oc Syrah 2019;5.8;211
+5796;Château Saransot-Dupré Bordeaux Blanc 2016;12.5;12
+5797;Château Saransot-Dupré Listrac-Médoc 2016;17.2;123
+5803;Château Tour Haut-Caussan Médoc 2015;17.1;36
+5806;Château La Croix Meunier Saint-Emilion Grand Cru 2014;17.4;0
+5809;Château Tour De Pez Saint-Estèphe Les Hauts de Pez 2016;17.9;0
+5815;Maison Trimbach Muscat Réserve 2017;16.6;11
+5816;Maison Trimbach Riesling 2017;16.9;5
+5890;Saumaize-Michelin Saint-Véran Les Crèches 2018;19.3;55
+5891;Saumaize-Michelin Viré-Clessé 2018;19.0;4
+5894;Thevenet Quintaine Viré-Clessé Emilian Gillet 2017;15.4;18
+5900;Stéphane Tissot Arbois D.D. 2016;18.25;0
+5904;Domaine de Montbourgeau Côtes du Jura Poulsard 2018;18.8;25
+5906;Domaine de Montbourgeau L'Etoile En Banode 2016;19.8;0
+5907;Domaine de Montbourgeau Vin de Paille 2013;17.7;5
+5930;Borie La Vitarèle Languedoc Blanc Le Grand Mayol 2019;14.1;66
+5956;Clos du Prieur Terrasses du Larzac 2018;17.2;12
+5958;Domaine Labranche Laffont Madiran Tradition 2016;8.7;44
+5959;Domaine Labranche Laffont Madiran Vieilles Vignes 2015;15.4;32
+5960;Domaine Labranche Laffont Pacherenc du Vic-Bilh Sec 2017;12.7;27
+5963;Domaine de l'Ancienne Cure Bergerac Blanc Sec L'Abbaye 2016;13.5;28
+5964;Domaine de l'Ancienne Cure Pécharmant L'Abbaye 2015;16.3;11
+6035;Zind-Humbrecht Muscat Turckheim 2016;17.9;21
+6042;Domaine La Croix Belle Côtes de Thongue Rosé Les Grillons 2019;8.5;0
+6047;Château de La Liquière Faugères L'Ampoule 2019;10.9;46
+6070;Borie La Vitarèle Pays d'Hérault Les Cigales 2019;9.3;124
+6072;Clos du Mont-Olivet Côtes-du-Rhône Blanc 2019;13.6;41
+6093;Château de Villeneuve Saumur-Champigny 2017;12.6;0
+6094;Château de Villeneuve Saumur-Champigny Clos de la Bienboire 2018;13.4;2
+6127;Moulin de Gassac IGP Pays d'Hérault Rouge Mazet du Levant 2017;10.6;66
+6128;Moulin de Gassac IGP Pays d'Hérault Blanc Faune 2017;10.6;50
+6129;Moulin de Gassac IGP Pays d'Hérault Guilhem Blanc 2017;5.2;30
+6278;Borie de Maurel Minervois Rouge Esprit d'Automne 2019;9.0;69
+6280;Borie de Maurel Minervois Blanc La Belle Aude 2018;10.4;0
+6584;La Préceptorie Côtes du Roussillon Blanc Coume Marie 2018;13.5;29
+6585;La Préceptorie Côtes du Roussillon Blanc Terres Nouvelles 2018;19.0;38
+6616;Clos du Mont-Olivet Lirac Rouge 2017;15.4;8
+6617;Clos du Mont-Olivet Vins de Pays du Gard Rive Droite 2018;9.9;12
+6618;Clos du Mont-Olivet Vins de Pays du Gard Confluence 2017;13.5;2
+6738;Emile Boeckel Crémant Chardonnay Extra Brut 2016;15.4;40
+6928;Le Cèdre de Jean Faure Saint-Emilion 2016;19.0;20
+6930;Mouthes Le Bihan Côtes de Duras L'Aimé Chai 2015;8.4;83
+7338;Domaine Saint-Nicolas Vin de France Blanc Les Clous 2019;16.3;45
