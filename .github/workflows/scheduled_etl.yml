@@ -1,0 +1,40 @@
+name: ETL Mensuel Planifié et Migration MongoDBon:Déclenche le workflow manuellement via l'interface GitHubworkflow_dispatch:Déclenche le workflow automatiquementschedule:# Exécution tous les 15 du mois à 9h00 (UTC)# Note : Le temps sur GitHub Actions est en UTC. Ajustez-le si nécessaire pour le fuseau horaire CEST/CET.- cron: '0 9 15 * *'jobs:run_etl_and_migrate:runs-on: ubuntu-lateststeps:
+- name: 1. Checkout du Code
+  uses: actions/checkout@v4
+
+- name: 2. Configuration de Python
+  uses: actions/setup-python@v4
+  with:
+    python-version: '3.10' # Utilisez la version de Python adaptée à votre environnement
+
+- name: 3. Installation des Dépendances
+  run: |
+    # Les dépendances nécessaires pour pandas, duckdb et pymongo
+    pip install pandas duckdb openpyxl pymongo
+
+- name: 4. Exécution du Script ETL
+  # Cela suppose que le fichier etl_vins.py se trouve dans la racine ou sous-dossier (Migration-MongoDB/producer)
+  run: python etl_vins.py
+  working-directory: ./producer # Assurez-vous que ce chemin est correct si le script est dans un sous-dossier
+  
+  # NOTE IMPORTANTE SUR MONGODB DANS GITHUB ACTIONS :
+  # Par défaut, ce workflow va *échouer* à l'Étape 5 (Exportation MongoDB) car
+  # il ne trouve pas de service MongoDB actif sur 'localhost:27017'.
+  # Pour que l'export MongoDB fonctionne, vous devez :
+  # 1. Utiliser un service MongoDB accessible publiquement (ex: MongoDB Atlas).
+  # 2. Utiliser l'URI Atlas et stocker les identifiants (URI/mot de passe)
+  #    comme 'Secrets' dans les paramètres de votre dépôt GitHub, 
+  #    puis mettre à jour MONGO_URI dans etl_vins.py pour utiliser ce Secret.
+  # Sinon, le script s'exécutera, générera les rapports CSV/Excel, 
+  # mais affichera une erreur à l'Étape 5 et se terminera correctement.
+
+- name: 5. Sauvegarde des Artefacts (Rapports)
+  # Cette étape sauvegarde les rapports générés pour pouvoir les télécharger
+  uses: actions/upload-artifact@v3
+  with:
+    name: rapports-etl-${{ github.event.schedule }}
+    path: producer/*.csv
+    if-no-files-found: ignore
+    
+- name: 6. Afficher les résultats
+  run: echo "Workflow ETL terminé. Les rapports sont disponibles en tant qu'artefacts."
