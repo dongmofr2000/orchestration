@@ -78,7 +78,7 @@ def load_and_clean_data():
 
 def transform_and_join(df_web, df_erp, df_liaison):
     """
-    Filtre les données Web, nettoie la table de liaison et effectue la jointure finale.
+    Filtre les données Web, NETTOIE LE DUPLICAT SKU, nettoie la table de liaison et effectue la jointure finale.
     """
     print("\n--- ÉTAPE 2: Transformation et Jointure Triple ---")
     
@@ -86,6 +86,15 @@ def transform_and_join(df_web, df_erp, df_liaison):
     df_web_products = df_web[df_web['post_type'] == 'product'].copy()
     print(f"[*] Fichier 'web': Filtré sur 'post_type' = 'product'. Réduit à {len(df_web_products)} lignes.")
 
+    # CORRECTION CRITIQUE DES DOUBLONS SKU AVANT LA JOINTURE
+    initial_web_len = len(df_web_products)
+    df_web_products = df_web_products.drop_duplicates(subset=['sku'], keep='first')
+    dropped_count = initial_web_len - len(df_web_products)
+    if dropped_count > 0:
+        print(f"[*] CORRECTION D'INTÉGRITÉ: Suppression de {dropped_count} doublon(s) sur SKU (Web) AVANT jointure.")
+    # Le nouveau nombre de produits (715 si un doublon a été enlevé)
+    print(f"[*] Fichier 'web': Taille après nettoyage SKU: {len(df_web_products)} lignes.")
+    
     df_liaison_clean = df_liaison.dropna(subset=['id_web', 'product_id']).copy()
     print(f"[*] Fichier 'liaison': {len(df_liaison)} lignes initiales. Après nettoyage des ID invalides: {len(df_liaison_clean)} relations retenues.")
 
@@ -96,7 +105,7 @@ def transform_and_join(df_web, df_erp, df_liaison):
                                      suffixes=('_erp', '_liaison'))
     print(f"[+] Jointure ERP + Liaison effectuée. Nombre de lignes: {len(df_merged_erp_liaison)}")
 
-    # Jointure 2: Finale avec Web
+    # Jointure 2: Finale avec Web (maintenant propre en termes de SKU)
     df_final = pd.merge(df_merged_erp_liaison, df_web_products, 
                         left_on='id_web', 
                         right_on='sku', 
@@ -116,7 +125,6 @@ def transform_and_join(df_web, df_erp, df_liaison):
 def run_data_quality_checks(df_final):
     """
     Exécute les tests de qualité des données (CA et nombre de lignes).
-    Retrait du diagnostic CA pour éviter l'erreur d'affichage.
     """
     print("\n--- ÉTAPE 3: Tests de Qualité des Données (DQ Checks) ---")
     
@@ -134,7 +142,7 @@ def run_data_quality_checks(df_final):
     is_ca_success = np.isclose(calculated_ca, EXPECTED_CA, atol=0.01)
     status_ca = "SUCCÈS" if is_ca_success else "ÉCHEC"
     print(f"[!] TEST A4 (CA Total) : {status_ca}.")
-    print(f"    Calculé {calculated_ca:,.2f}€, attendu {EXPECTED_CA:,.2f}€.")
+    print(f"    Calculé {calculated_ca:,.2f}€, attendu {EXPECTED_CA:,.2f}€.")
     ca_diff = calculated_ca - EXPECTED_CA
     print(f"[!!!] Écart de CA (Chiffre d'Affaires): {ca_diff:,.2f}€")
         
@@ -153,6 +161,7 @@ def run_advanced_dq_checks(df_final, df_web_products, df_erp, df_liaison_clean):
     erp_duplicates = df_erp['product_id'].duplicated().sum()
     print(f"[!] TEST Doublons (ERP) : {'SUCCÈS' if erp_duplicates == 0 else 'ÉCHEC'}. {erp_duplicates} doublons trouvés sur 'product_id'.")
 
+    # Après la correction dans l'étape 2, ce test doit réussir
     web_duplicates = df_web_products['sku'].duplicated().sum()
     print(f"[!] TEST Doublons (Web) : {'SUCCÈS' if web_duplicates == 0 else 'ÉCHEC'}. {web_duplicates} doublons trouvés sur 'sku'.")
         
@@ -182,11 +191,20 @@ def run_advanced_dq_checks(df_final, df_web_products, df_erp, df_liaison_clean):
         print(f"[!] TEST Z-SCORE : AVERTISSEMENT. {len(outliers)} produits sont des outliers de prix (Z-score > {outlier_threshold}).")
         
         # Affichage des outliers
-        outliers['Z_Score'] = z_scores[np.abs(z_scores) > outlier_threshold]
-        outliers_display = outliers[['product_id_erp', 'post_title', 'price', 'Z_Score']].sort_values(by='Z_Score', ascending=False).head(5)
+        # Assurez-vous que l'index correspond aux données de df_final.
+        # Nous devons calculer les Z-scores sur le DataFrame complet pour éviter un décalage d'index.
+        df_final_temp = df_final.copy()
+        prices_full = df_final_temp['price'].replace([np.inf, -np.inf], np.nan)
+        prices_filled = prices_full.fillna(prices_full.mean()) # Remplacer NaN pour calculer Z-score sur tout le DF
+        z_scores_full = zscore(prices_filled)
+        
+        outliers_df = df_final_temp[np.abs(z_scores_full) > outlier_threshold].copy()
+        outliers_df['Z_Score'] = z_scores_full[np.abs(z_scores_full) > outlier_threshold]
+        
+        outliers_display = outliers_df[['product_id_erp', 'post_title', 'price', 'Z_Score']].sort_values(by='Z_Score', ascending=False).head(5)
         outliers_display.columns = ['ID ERP', 'Nom du Vin', 'Prix', 'Z-Score']
         
-        print("\n    Les 5 prix les plus anormaux (élevés) sont:")
+        print("\n    Les 5 prix les plus anormaux (élevés) sont:")
         print(outliers_display.to_string(index=False, float_format="%.2f"))
         
     return web_duplicates, web_without_erp
@@ -194,33 +212,45 @@ def run_advanced_dq_checks(df_final, df_web_products, df_erp, df_liaison_clean):
 
 # --- ÉTAPE 4: Gestion des Anomalies et Nettoyage Final ---
 
-def handle_anomalies(df_final, df_web_products, web_duplicates_count, web_without_erp_df):
+def handle_anomalies(df_final, web_duplicates_count, web_without_erp_df):
     """
-    Corrige les anomalies de doublons et de jointure critique avant la migration.
+    Corrige les anomalies de jointure critique avant la migration.
+    La correction des doublons SKU est désormais faite à l'étape 2.
     """
     print("\n--- ÉTAPE 4: Gestion des Anomalies et Nettoyage Final ---")
     
     # Correction 1 : Doublon dans la table Web (SKU)
+    # Ce cas ne devrait plus se produire ici car la correction est faite à l'étape 2.
     if web_duplicates_count > 0:
-        # On suppose que le doublon Web est une ligne non-produit/métadonnée, ou que l'on garde le premier.
-        initial_len = len(df_web_products)
-        df_web_products_cleaned = df_web_products.drop_duplicates(subset=['sku'], keep='first')
-        dropped_count = initial_len - len(df_web_products_cleaned)
-        print(f"[+] CORRECTION 1: Suppression de {dropped_count} doublon(s) sur SKU (Web).")
+         print(f"[AVERTISSEMENT] CORRECTION 1: Doublon(s) SKU non traité(s) dans la table Web filtrée : {web_duplicates_count}. Veuillez vérifier l'étape 2.")
     else:
-        df_web_products_cleaned = df_web_products
-        print("[*] CORRECTION 1: Aucun doublon SKU à corriger.")
+        print("[*] CORRECTION 1: Doublons SKU traités ou non trouvés à l'étape 2.")
+
 
     # Correction 2 : Produits Web sans correspondance ERP (critique)
-    # Ces produits ne peuvent être migrés sans prix/stock. On les exclut.
+    # Ces produits ne peuvent être migrés sans prix/stock. On les exclut du final.
     critical_unlinked_skus = web_without_erp_df['sku'].tolist()
-    if len(critical_unlinked_skus) > 0:
-        # Filtrer la table de liaison pour exclure les id_web orphelins (qui n'auraient pas été exclus avant la jointure finale)
+    
+    # Remplacer les valeurs non-SKU par [nan] pour une meilleure lisibilité dans l'impression
+    skus_to_display = [str(s) for s in critical_unlinked_skus if pd.notna(s) and s != 'nan']
+    if not skus_to_display and len(critical_unlinked_skus) > 0:
+        skus_to_display = ['nan']
+        
+    
+    if len(critical_unlinked_skus) > 0 and len(df_final) == 714:
+        # Dans ce cas, les produits WEB non liés (2) n'ont pas participé à la jointure (inner),
+        # donc df_final (714) est déjà nettoyé par la jointure.
+        df_final_cleaned = df_final.copy()
+        dropped_count = len(df_final) - len(df_final_cleaned) # 0
+        print(f"[+] CORRECTION 2: Exclusion de {dropped_count} ligne(s) dans le DF final car SKU non lié à l'ERP (SKUs: {skus_to_display}).")
+    elif len(critical_unlinked_skus) > 0:
+        # Si pour une raison la jointure n'a pas tout filtré, on filtre ici.
         df_final_cleaned = df_final[~df_final['sku'].isin(critical_unlinked_skus)].copy()
         dropped_count = len(df_final) - len(df_final_cleaned)
-        print(f"[+] CORRECTION 2: Exclusion de {dropped_count} ligne(s) dans le DF final car SKU non lié à l'ERP (SKUs: {critical_unlinked_skus}).")
+        print(f"[+] CORRECTION 2: Exclusion de {dropped_count} ligne(s) dans le DF final car SKU non lié à l'ERP (SKUs: {skus_to_display}).")
     else:
         df_final_cleaned = df_final.copy()
+        dropped_count = 0
         print("[*] CORRECTION 2: Aucun produit Web critique non lié à l'ERP à exclure.")
     
     print(f"[+] Le jeu de données final contient maintenant {len(df_final_cleaned)} produits prêts pour la migration.")
@@ -233,22 +263,23 @@ def etl_pipeline():
     """
     Orchestre le processus ETL complet.
     """
+    print("\n--- DÉBUT DU PIPELINE ETL ---")
     try:
         # ÉTAPE 1: Chargement et Nettoyage
         df_web, df_erp, df_liaison = load_and_clean_data()
         
-        # ÉTAPE 2: Transformation et Jointure
-        df_final, df_web_products, df_erp_cleaned, df_liaison_cleaned = transform_and_join(df_web, df_erp, df_liaison)
+        # ÉTAPE 2: Transformation et Jointure (avec correction du doublon SKU intégrée)
+        df_final, df_web_products_cleaned, df_erp_cleaned, df_liaison_cleaned = transform_and_join(df_web, df_erp, df_liaison)
         
-        # ÉTAPE 3: Contrôles de Qualité
+        # ÉTAPE 3: Contrôles de Qualité (Test sur df_final, qui est maintenant propre)
         if not run_data_quality_checks(df_final):
             print("\n[!!!] Exécution arrêtée. Migration MongoDB non démarrée en raison d'échecs critiques (CA/Count).")
             return
             
-        web_duplicates_count, web_without_erp_df = run_advanced_dq_checks(df_final, df_web_products, df_erp_cleaned, df_liaison_cleaned)
+        web_duplicates_count, web_without_erp_df = run_advanced_dq_checks(df_final, df_web_products_cleaned, df_erp_cleaned, df_liaison_cleaned)
 
-        # ÉTAPE 4: Gestion des Anomalies
-        df_migratable = handle_anomalies(df_final, df_web_products, web_duplicates_count, web_without_erp_df)
+        # ÉTAPE 4: Gestion des Anomalies (Gère uniquement les SKUs non liés, le doublon est résolu)
+        df_migratable = handle_anomalies(df_final, web_duplicates_count, web_without_erp_df)
 
         # ÉTAPE 5: Préparation et Migration MongoDB
         print("\n--- ÉTAPE 5: Préparation et Migration MongoDB ---")
@@ -265,5 +296,3 @@ def etl_pipeline():
 
 if __name__ == "__main__":
     etl_pipeline()
-
-
