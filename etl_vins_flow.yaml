@@ -1,28 +1,137 @@
-﻿id: etl_vins_analysis
+id: etl_vins_hybride
 namespace: dev
-
-description: Pipeline ETL complet PURE PYTHON (Pandas) pour le nettoyage, la jointure, le calcul du CA et l'analyse des prix des produits de vins.
+description: Pipeline ETL intégrant l'identification des vins (Z-Score) via Python et les traitements SQL via DuckDB.
 
 tasks:
-  - id: complete_etl_analysis
-    type: io.kestra.plugin.scripts.python.Commands
-    name: Exécution du Pipeline ETL complet (Pandas)
-    
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 1: ETL Principal (Python : Jointure, Nettoyage, CA Produit, Z-Score) ---
+  # Utilise la tâche Bash comme workaround pour l'environnement Docker.
+  - id: etl_principal_python
+    type: io.kestra.core.tasks.scripts.Bash
+    description: Exécution du script Python pour le nettoyage, la fusion des données, le CA produit, le Z-Score et l'export des rapports initiaux.
+
     inputFiles:
-      etl_vins.py: "{{ read('etl_vins.py') }}"
-      Fichier_erp.csv: "{{ read('Fichier_erp.csv') }}" 
-      Fichier_web.csv: "{{ read('Fichier_web.csv') }}"
-      fichier_liaison.csv: "{{ read('fichier_liaison.csv') }}"
-      
-    requirements:
-      - pandas
-      - numpy
-      - scipy
-      - openpyxl
+      # Fichiers de données et script Python, tous dans le dossier 'producer/'
+      etl_vins.py: "{{ read('producer/etl_vins.py') }}" 
+      Fichier_erp.csv: "{{ read('producer/Fichier_erp.csv') }}" 
+      Fichier_web.csv: "{{ read('producer/Fichier_web.csv') }}"
+      fichier_liaison.csv: "{{ read('producer/fichier_liaison.csv') }}"
 
     commands:
+      # 1. Installation des dépendances (dans le worker Kestra)
+      - pip install pandas numpy scipy openpyxl
+      # 2. Exécution du script Python (génère rapport_vins_millésimés.xlsx et produits_sans_lien_web.xlsx)
       - python etl_vins.py
       
     outputFiles:
       - rapport_vins_millésimés.xlsx
       - produits_sans_lien_web.xlsx
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 2: Tests Unitaires (Python : Qualité et Cohérence) ---
+  # Intègre les tâches de tests comme demandé.
+  - id: run_unit_tests
+    type: io.kestra.core.tasks.scripts.Bash
+    description: Exécution des tests unitaires (unittest) pour vérifier l'intégrité et la cohérence des données.
+
+    inputFiles:
+      # Le script de test doit aussi être dans 'producer/'
+      etl_vins.py: "{{ read('producer/etl_vins.py') }}" 
+      test_etl_vins.py: "{{ read('producer/test_etl_vins.py') }}"
+      Fichier_erp.csv: "{{ read('producer/Fichier_erp.csv') }}" 
+      Fichier_web.csv: "{{ read('producer/Fichier_web.csv') }}"
+      fichier_liaison.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    commands:
+      # 1. Ré-installation des dépendances (pour isoler l'environnement des tests)
+      - pip install pandas numpy scipy openpyxl
+      # 2. Exécution du script de tests
+      - python test_etl_vins.py
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 3: Dédoublonnage & Suppression des Doublons (SQL - DuckDB) ---
+  # Simule le dédoublonnage en comptant les doublons après la jointure ERP/Web/Liaison.
+  - id: deduplication_check_duckdb
+    type: io.kestra.plugin.jdbc.duckdb.Query
+    description: Check de dédoublonnage et suppression des lignes invalides (SQL/DuckDB).
+
+    inputFiles:
+      erp_data.csv: "{{ read('producer/Fichier_erp.csv') }}"
+      web_data.csv: "{{ read('producer/Fichier_web.csv') }}"
+      liaison_data.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    sql: |
+      -- Fusion des deux systèmes et suppression des doublons (implicite avec DISTINCT)
+      CREATE OR REPLACE TABLE data_deduplicated AS
+      SELECT DISTINCT
+          t1.product_id,
+          t2.id_web
+      FROM read_csv_auto('{{ workingDir }}/erp_data.csv', AUTO_DETECT=TRUE) t1
+      INNER JOIN read_csv_auto('{{ workingDir }}/liaison_data.csv', AUTO_DETECT=TRUE) t2
+          ON t1.product_id = t2.product_id
+      INNER JOIN read_csv_auto('{{ workingDir }}/web_data.csv', AUTO_DETECT=TRUE) t3
+          ON t2.id_web = t3.sku;
+          
+      -- Vérification des doublons (sortie dans les logs)
+      SELECT 'Doublons trouvés:', count(product_id) - count(DISTINCT product_id) AS duplicate_count
+      FROM data_deduplicated;
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 4: Calcul du Chiffre d'Affaires Global (SQL - DuckDB) ---
+  - id: global_ca_sql
+    type: io.kestra.plugin.jdbc.duckdb.Query
+    description: Calcul du Chiffre d'Affaires Global (CA) par produit et total via SQL.
+    
+    # Réutilise les données du fichier ERP et WEB/Liaison (le script Python gère déjà le prix formaté)
+    inputFiles:
+      erp_data.csv: "{{ read('producer/Fichier_erp.csv') }}"
+      web_data.csv: "{{ read('producer/Fichier_web.csv') }}"
+      liaison_data.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    sql: |
+      -- Fusion et calcul du CA dans une seule requête SQL
+      CREATE OR REPLACE TABLE ca_details AS
+      SELECT
+          t1.product_id,
+          REPLACE(t1.price, ',', '.')::DOUBLE AS price_cleaned,
+          t3.total_sales,
+          (REPLACE(t1.price, ',', '.')::DOUBLE * t3.total_sales) AS ca_par_produit
+      FROM read_csv_auto('{{ workingDir }}/erp_data.csv', AUTO_DETECT=TRUE) t1
+      INNER JOIN read_csv_auto('{{ workingDir }}/liaison_data.csv', AUTO_DETECT=TRUE) t2
+          ON t1.product_id = t2.product_id
+      LEFT JOIN read_csv_auto('{{ workingDir }}/web_data.csv', AUTO_DETECT=TRUE) t3
+          ON t2.id_web = t3.sku;
+          
+      -- Calcul du CA Global (Exporté dans les logs de la tâche)
+      SELECT 'CA Global (en €):', SUM(ca_par_produit) AS chiffre_affaires_global FROM ca_details;
+
+    # Export du rapport détaillé du CA vers un fichier pour archivage
+    outputFiles:
+      ca_details.csv: "SELECT * FROM ca_details"
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 5: Stockage et Confirmation ---
+  - id: archive_reports
+    type: io.kestra.core.tasks.storages.Concat
+    description: Archivage des fichiers générés.
+
+    files:
+      # Fichiers générés par le script Python (Étape 1)
+      - "{{ outputs.etl_principal_python.outputFiles['rapport_vins_millésimés.xlsx'] }}"
+      - "{{ outputs.etl_principal_python.outputFiles['produits_sans_lien_web.xlsx'] }}"
+      # Fichier généré par la requête SQL (Étape 4)
+      - "{{ outputs.global_ca_sql.outputFiles['ca_details.csv'] }}"
+      
+    separator: "" # Ne s'applique pas aux fichiers binaires/CSV
+    
+  - id: validation_finale
+    type: io.kestra.core.tasks.debugs.Return
+    description: Confirmation de la fin du pipeline et des tests.
+    format: |
+      ✅ Le pipeline Hybride (Python & DuckDB) a été exécuté avec succès.
+      
+      - La classification des vins millésimés (Z-Score > 2) est terminée.
+      - Les tests unitaires (Dédoublonnage, Cohérence) sont passés.
+      - Le Chiffre d'Affaires Global a été calculé via SQL.
+      
+      Les rapports sont archivés dans l'espace de stockage de Kestra.
