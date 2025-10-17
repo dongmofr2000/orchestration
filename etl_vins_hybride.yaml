@@ -1,0 +1,132 @@
+id: etl_vins_hybride
+namespace: dev
+description: Pipeline ETL intégrant l'identification des vins (Z-Score) via Python et les traitements SQL via DuckDB.
+
+tasks:
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 1: ETL Principal (Python : Jointure, Nettoyage, CA Produit, Z-Score) ---
+  - id: etl_principal_python
+    type: io.kestra.core.tasks.scripts.Bash
+    description: Exécution du script Python pour le nettoyage, la fusion des données, le CA produit, le Z-Score et l'export des rapports initiaux.
+
+    inputFiles:
+      etl_vins.py: "{{ read('producer/etl_vins.py') }}" 
+      Fichier_erp.csv: "{{ read('producer/Fichier_erp.csv') }}" 
+      Fichier_web.csv: "{{ read('producer/Fichier_web.csv') }}"
+      fichier_liaison.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    commands:
+      # Pour contourner les problèmes d'environnement:
+      - pip install pandas numpy scipy openpyxl
+      - python etl_vins.py
+      
+    outputFiles:
+      # Fichiers de support
+      - rapport_vins_millésimés.xlsx
+      - produits_sans_lien_web.xlsx
+      # ✅ LIVRABLES FINAUX DEMANDÉS
+      - rapport_ca_produit.xlsx
+      - vins_premium.csv
+      - vins_ordinaires.csv
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 2: Tests Unitaires (Python : Qualité et Cohérence) ---
+  - id: run_unit_tests
+    type: io.kestra.core.tasks.scripts.Bash
+    description: Exécution des tests unitaires (unittest) pour vérifier l'intégrité et la cohérence des données.
+
+    inputFiles:
+      etl_vins.py: "{{ read('producer/etl_vins.py') }}" 
+      test_etl_vins.py: "{{ read('producer/test_etl_vins.py') }}"
+      Fichier_erp.csv: "{{ read('producer/Fichier_erp.csv') }}" 
+      Fichier_web.csv: "{{ read('producer/Fichier_web.csv') }}"
+      fichier_liaison.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    commands:
+      - pip install pandas numpy scipy openpyxl
+      - python test_etl_vins.py
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 3: Dédoublonnage & Suppression des Doublons (SQL - DuckDB) ---
+  - id: deduplication_check_duckdb
+    type: io.kestra.plugin.jdbc.duckdb.Query
+    description: Check de dédoublonnage et suppression des lignes invalides (SQL/DuckDB).
+
+    inputFiles:
+      erp_data.csv: "{{ read('producer/Fichier_erp.csv') }}"
+      web_data.csv: "{{ read('producer/Fichier_web.csv') }}"
+      liaison_data.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    sql: |
+      -- Fusion des deux systèmes et dédoublonnage
+      CREATE OR REPLACE TABLE data_deduplicated AS
+      SELECT DISTINCT
+          t1.product_id,
+          t2.id_web
+      FROM read_csv_auto('{{ workingDir }}/erp_data.csv', AUTO_DETECT=TRUE) t1
+      INNER JOIN read_csv_auto('{{ workingDir }}/liaison_data.csv', AUTO_DETECT=TRUE) t2
+          ON t1.product_id = t2.product_id
+      INNER JOIN read_csv_auto('{{ workingDir }}/web_data.csv', AUTO_DETECT=TRUE) t3
+          ON t2.id_web = t3.sku;
+          
+      SELECT 'Doublons trouvés:', count(product_id) - count(DISTINCT product_id) AS duplicate_count
+      FROM data_deduplicated;
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 4: Calcul du Chiffre d'Affaires Global (SQL - DuckDB) ---
+  - id: global_ca_sql
+    type: io.kestra.plugin.jdbc.duckdb.Query
+    description: Calcul du Chiffre d'Affaires Global (CA) par produit et total via SQL.
+    
+    inputFiles:
+      erp_data.csv: "{{ read('producer/Fichier_erp.csv') }}"
+      web_data.csv: "{{ read('producer/Fichier_web.csv') }}"
+      liaison_data.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    sql: |
+      -- Calcul des détails et du CA global
+      CREATE OR REPLACE TABLE ca_details AS
+      SELECT
+          t1.product_id,
+          REPLACE(t1.price, ',', '.')::DOUBLE AS price_cleaned,
+          t3.total_sales,
+          (REPLACE(t1.price, ',', '.')::DOUBLE * t3.total_sales) AS ca_par_produit
+      FROM read_csv_auto('{{ workingDir }}/erp_data.csv', AUTO_DETECT=TRUE) t1
+      INNER JOIN read_csv_auto('{{ workingDir }}/liaison_data.csv', AUTO_DETECT=TRUE) t2
+          ON t1.product_id = t2.product_id
+      LEFT JOIN read_csv_auto('{{ workingDir }}/web_data.csv', AUTO_DETECT=TRUE) t3
+          ON t2.id_web = t3.sku;
+          
+      SELECT 'CA Global (en €):', SUM(ca_par_produit) AS chiffre_affaires_global FROM ca_details;
+
+    outputFiles:
+      ca_details.csv: "SELECT * FROM ca_details"
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 5: Archivage Final des Livrables ---
+  - id: archivage_et_export_final
+    type: io.kestra.core.tasks.storages.Concat
+    description: Archivage de TOUS les livrables finaux.
+
+    files:
+      # Livrables demandés par l'utilisateur
+      - "{{ outputs.etl_principal_python.outputFiles['rapport_ca_produit.xlsx'] }}"
+      - "{{ outputs.etl_principal_python.outputFiles['vins_premium.csv'] }}"
+      - "{{ outputs.etl_principal_python.outputFiles['vins_ordinaires.csv'] }}"
+      # Autres rapports (inchangés)
+      - "{{ outputs.etl_principal_python.outputFiles['rapport_vins_millésimés.xlsx'] }}"
+      - "{{ outputs.etl_principal_python.outputFiles['produits_sans_lien_web.xlsx'] }}"
+      - "{{ outputs.global_ca_sql.outputFiles['ca_details.csv'] }}"
+      
+    separator: "" 
+    
+  - id: validation_finale
+    type: io.kestra.core.tasks.debugs.Return
+    description: Confirmation de la fin du pipeline et des tests.
+    format: |
+      ✅ Le pipeline Hybride (Python & DuckDB) a été exécuté avec succès.
+      
+      Tous les livrables finaux demandés sont disponibles dans les sorties de la tâche d'archivage :
+      - **rapport_ca_produit.xlsx** (Chiffres d'Affaires par produit)
+      - **vins_premium.csv** (Vins Premium/Millésimés)
+      - **vins_ordinaires.csv** (Vins Ordinaires)

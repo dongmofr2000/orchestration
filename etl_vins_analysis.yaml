@@ -1,0 +1,66 @@
+id: etl_vins_analysis
+namespace: dev
+
+description: Pipeline ETL de contournement forcé pour les problèmes d'environnement.
+
+tasks:
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 1: Exécution du Pipeline ETL (avec tâche Bash) ---
+  - id: etl_transformation_and_data_quality_checks
+    type: io.kestra.core.tasks.scripts.Bash # Tâche Shell générique
+    description: 1. Exécution ETL et Installation des dépendances dans le worker Kestra
+    
+    inputFiles:
+      etl_vins.py: "{{ read('producer/etl_vins.py') }}" 
+      Fichier_erp.csv: "{{ read('producer/Fichier_erp.csv') }}" 
+      Fichier_web.csv: "{{ read('producer/Fichier_web.csv') }}"
+      fichier_liaison.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    # CORRECTION : Intégration de l'installation dans le tableau 'commands'
+    commands:
+      # 1. Installation des dépendances (Nécessite que pip et python soient accessibles dans le worker Kestra)
+      - pip install pandas numpy scipy openpyxl
+      # 2. Exécution du script ETL
+      - python etl_vins.py
+      
+    outputFiles:
+      - rapport_vins_millésimés.xlsx
+      - produits_sans_lien_web.xlsx
+
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 2: Exécution des Tests Unitaires (avec tâche Bash) ---
+  - id: run_unit_tests_in_worker
+    type: io.kestra.core.tasks.scripts.Bash # Tâche Shell générique
+    description: 2. Exécution des Tests Unitaires dans le contexte du worker Kestra
+    
+    inputFiles:
+      etl_vins.py: "{{ read('producer/etl_vins.py') }}" 
+      test_etl_vins.py: "{{ read('producer/test_etl_vins.py') }}"
+      Fichier_erp.csv: "{{ read('producer/Fichier_erp.csv') }}" 
+      Fichier_web.csv: "{{ read('producer/Fichier_web.csv') }}"
+      fichier_liaison.csv: "{{ read('producer/fichier_liaison.csv') }}"
+
+    commands:
+      # 1. Installation des dépendances (Répétée pour s'assurer que l'environnement est prêt pour les tests)
+      - pip install pandas numpy scipy openpyxl 
+      # 2. Exécution des tests unitaires
+      - python test_etl_vins.py
+      
+  # -----------------------------------------------------------------------------------
+  # --- ÉTAPE 3: Confirmation de l'Analyse ---
+  - id: dq_tests_confirmation
+    type: io.kestra.core.tasks.debugs.Return
+    description: 3. Confirmation de l'ETL et des Tests de Qualité Passés
+    
+    format: |
+      Le pipeline ETL a été complété avec succès et les tests unitaires sont passés. Le jeu de données est validé.
+      
+      **Vérifications intégrées réussies :**
+      
+      * ✅ **Test d’absence de doublons** (validé par les tests unitaires)
+      * ✅ **Test d’absence de valeurs manquantes** (validé par les tests unitaires)
+      * ✅ **Test de cohérence des jointures** (validé par les tests unitaires)
+      * ✅ **Test de cohérence du chiffre d'affaires** (validé par les tests unitaires)
+      * ✅ **Test du Z-score sur le prix des vins** (validé par les tests unitaires)
+      
+      Le jeu de données final est prêt pour la migration.
