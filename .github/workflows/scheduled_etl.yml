@@ -1,4 +1,7 @@
-name: ETL Mensuel Planifié et Migration MongoDBon:Déclenche le workflow manuellement via l'interface GitHubworkflow_dispatch:Déclenche le workflow automatiquementschedule:# Exécution tous les 15 du mois à 9h00 (UTC)# Note : Le temps sur GitHub Actions est en UTC. Ajustez-le si nécessaire pour le fuseau horaire CEST/CET.- cron: '0 9 15 * *'jobs:run_etl_and_migrate:runs-on: ubuntu-lateststeps:
+name: ETL Mensuel Planifié et Migration MongoDBon:
+Déclenche le workflow manuellement via l'interface GitHubworkflow_dispatch:Déclenche le workflow automatiquementschedule:
+# Exécution tous les 15 du mois à 9h00 (UTC)# Note : Le temps sur GitHub Actions est en UTC. 
+Ajustez-le si nécessaire pour le fuseau horaire CEST/CET.- cron: '0 9 15 * *'jobs:run_etl_and_migrate:runs-on: ubuntu-lateststeps:
 - name: 1. Checkout du Code
   uses: actions/checkout@v4
 
