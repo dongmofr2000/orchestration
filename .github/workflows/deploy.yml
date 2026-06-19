@@ -1,16 +1,12 @@
-name: Pipeline CI/CD Pratique
+name: Pipeline CI/CD Sportif
 
-# 1. Déclencheurs (Triggers)
 on:
   push:
-    branches: [ "main" ] # Se déclenche à chaque push sur la branche main
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ] # Se déclenche pour chaque demande de fusion vers main
+    branches: [ "main" ]
 
-# 2. Les étapes du pipeline
 jobs:
-  
-  # ÉTAPE 1 : L'Intégration Continue (CI) - Tester l'application
   build-and-test:
     runs-on: ubuntu-latest
 
@@ -18,38 +14,19 @@ jobs:
     - name: Récupérer le code du dépôt
       uses: actions/checkout@v4
 
-    - name: Configurer l'environnement (Exemple avec Node.js)
-      uses: actions/setup-node@v4
+    - name: Configurer Python
+      uses: actions/setup-python@v5
       with:
-        node-version: '20'
-        cache: 'npm'
+        python-version: '3.10'
+        # Pas de cache activé ici pour éviter l'erreur de fichier manquant
 
     - name: Installer les dépendances
-      run: npm ci
-
-    - name: Vérifier la qualité du code (Linter)
-      run: npm run lint
-      continue-on-error: true # Permet de ne pas bloquer si c'est juste un avertissement
-
-    - name: Exécuter les tests unitaires
-      run: npm test
-
-  # ÉTAPE 2 : Le Déploiement Continu (CD) - Ne se lance que si la CI réussit
-  deploy:
-    needs: build-and-test # Impératif : le job précédent doit réussir
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' # Uniquement lors d'un vrai push sur main
-
-    steps:
-    - name: Récupérer le code
-      uses: actions/checkout@v4
-
-    - name: Simuler le déploiement sur le serveur de production
       run: |
-        echo "Connexion au serveur de production..."
-        echo "Mise à jour des fichiers en cours..."
-        echo "Application déployée avec succès ! 🚀"
-        
-    # Exemple concret si vous utilisiez un hébergeur comme Vercel, Render, ou un serveur SSH :
-    # - name: Deploy to Hosting Service
-    #   run: npm run deploy -- --token=${{ secrets.DEPLOY_TOKEN }}
+        python -m pip install --upgrade pip
+        # Si vous avez des bibliothèques spécifiques (comme pandas ou requests), 
+        # on les installe directement ici pour le POC :
+        pip install pandas
+
+    - name: Exécuter le pipeline sportif
+      run: |
+        python pipeline_sportif.py
