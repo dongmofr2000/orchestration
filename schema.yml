@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: qualified_rh
+    columns:
+      - name: id_salarie
+        tests:
+          - not_null
+          - unique
+      - name: salaire_brut_num
+        tests:
+          - not_null
+          - greater_than: {value: 0} # Test critique: le salaire doit être positif
+  
+  - name: reporting_gold
+    columns:
+      - name: cout_total_employe
+        tests:
+          # Test de qualité métier: S'assurer que le coût total n'excède pas le budget prévisionnel
+          - test_max_budget:
+              max_total_cost: 1500000.00 # Budget POC (1,5 million d'euros)

@@ -1,0 +1,56 @@
+id: poc_avantages_sportifs
+namespace: sport_data_solution
+description: Pipeline ETL orchestré via Python.
+
+inputs:
+  - id: python_pipeline_file
+    type: FILE
+    description: Le fichier pipeline_sportif.py contenant toute la logique.
+  - id: donnees_rh_file
+    type: FILE
+    description: Le fichier donnees_rh.csv.
+  - id: activites_simulees_file
+    type: FILE
+    description: Le fichier activites_simulees.csv.
+
+# 1. Variables (Non utilisées directement ici, mais conservées pour l'info)
+variables:
+  prime_rate: 0.05
+  min_activites: 15
+  cout_journalier_moyen: 250 
+
+# 2. Déclencheur : Planification mensuelle
+triggers:
+  - id: mensuel
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 9 15 * *" 
+
+# 3. Tâches principales (Une seule tâche)
+tasks:
+  
+  # ÉTAPE PYTHON : Exécution du pipeline ETL/ELT complet
+  - id: run_etl_pipeline
+    type: io.kestra.plugin.scripts.python.Commands
+    description: Exécute le script Python pour se connecter à la DB, extraire, transformer et charger les données.
+    
+    # Kestra télécharge les 3 fichiers dans le répertoire de travail du worker
+    inputFiles:
+      # Le fichier pipeline est nommé 'pipeline_sportif.py' pour être exécuté
+      pipeline_sportif.py: "{{ inputs.python_pipeline_file }}"
+      # Les CSV sont nommés comme dans les variables du script Python
+      donnees_rh.csv: "{{ inputs.donnees_rh_file }}"
+      activites_simulees.csv: "{{ inputs.activites_simulees_file }}"
+      
+    # Variables d'environnement pour que Python sache où se connecter
+    env:
+      # Le script Python lit ces variables pour se connecter à la BDD
+      DB_HOST: host.docker.internal 
+      DB_NAME: sport_projet
+      DB_USER: postgres
+      DB_PASS: Yaounde0123@
+    
+    commands:
+      # Installe les dépendances nécessaires
+      - pip install pandas numpy sqlalchemy psycopg2-binary requests 
+      # Exécute le script Python corrigé
+      - python pipeline_sportif.py
