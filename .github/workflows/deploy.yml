@@ -25,7 +25,10 @@ jobs:
         python -m pip install --upgrade pip
         # Si vous avez des bibliothèques spécifiques (comme pandas ou requests), 
         # on les installe directement ici pour le POC :
-        pip install pandas
+        - name: Installer les dépendances
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas requests sqlalchemy
 
     - name: Exécuter le pipeline sportif
       run: |
